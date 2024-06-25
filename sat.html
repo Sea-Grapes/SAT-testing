@@ -27,14 +27,7 @@
   </section>
   <section class='grow'>
     <div class='border border-slate-300 rounded-lg overflow-hidden'>
-      <table class='min-w-full divide-y divide-slate-300'>
-        <thead class='divide-y divide-slate-300 *:divide-x *:divide-slate-300'>
-          <tr class='bg-slate-100 font-medium text-slate-400 text-left *:py-4 *:px-6'>
-            <th>School</th>
-            <th>Address</th>
-            <th>Distance</th>
-          </tr>
-        </thead>
+      <table class='min-w-full'>
         <tbody class='divide-y divide-slate-300 *:divide-x *:divide-slate-300'></tbody>
       </table>
     </div>
@@ -105,7 +98,7 @@ function setUI() {
       make(tr, 'td', td => {
         td.colSpan = 3
         td.textContent = date
-        td.classList = 'text-center font-medium bg-slate-100 text-slate-400 py-2 px-6'
+        td.classList = 'text-center font-medium bg-slate-100 text-slate-400 py-4 px-6'
       })
     })
 
