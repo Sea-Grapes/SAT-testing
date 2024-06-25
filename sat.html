@@ -69,7 +69,7 @@ async function fetchData() {
       }) => [
         capitalize(name),
         `${capitalize(address1)} ${capitalize(city)} ${state.toUpperCase()} ${zip}`,
-        distance.toFixed(2)
+        distance.toFixed(2) 
       ])
       data[displayDate] = schools
       log(`Added schools from ${dateAPI} to data`)
