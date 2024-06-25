@@ -47,20 +47,36 @@ const log = msg => console.log(`[SAT] ${msg}`)
 const capitalize = str => str.toLowerCase().split(' ').map(s => s[0].toUpperCase() + s.slice(1)).join(' ')
 
 
-function fetchData() {
+async function fetchData() {
   log('Updating data...')
-  data = {
-    'August 24, 2024 — Saturday': [
-      ['Rainier Beach High School', '8815 Seward Park Avenue South Seattle, WA 98118', 11.65],
-      ['Rainier Beach High School', '8815 Seward Park Avenue South Seattle, WA 98118', 11.65],
-      ['Rainier Beach High School', '8815 Seward Park Avenue South Seattle, WA 98118', 11.65],
-    ],
-    'October 5, 2024 — Saturday': [
-      ['Rainier Beach High School', '8815 Seward Park Avenue South Seattle, WA 98118', 11.65],
-      ['Rainier Beach High School', '8815 Seward Park Avenue South Seattle, WA 98118', 11.65],
-      ['Rainier Beach High School', '8815 Seward Park Avenue South Seattle, WA 98118', 11.65],
-    ]
-  }
+  data = {}
+
+  let sessions = await (await fetch(`https://sat-admin-dates.collegeboard.org/`)).json()
+
+  log('Recieved testing dates, scanning for sessions')
+
+  await Promise.all(sessions.map( async({
+    eventFormattedDate: dateAPI,
+    eventDisplayDate: displayDate,
+  }) => {
+    let schools = await (await fetch(`https://aru-test-center-search.collegeboard.org/prod/test-centers?date=${dateAPI}&zip=${zipInput.value}&country=US`)).json()
+    console.log(schools)
+    schools = schools
+    .filter(school => school.distance <= distanceInput.value)
+    .filter(school => school.seatAvailability)
+    .map(({
+      name, distance,
+      address1, city, state, zip,
+    }) => [
+      capitalize(name),
+      `${capitalize(address1)} ${capitalize(city)} ${state.toUpperCase()} ${zip}`,
+      distance.toFixed(2)
+    ])
+    data[displayDate] = schools
+    log(`Added schools from ${dateAPI} to data`)
+  })) 
+
+  log('Finished fetching data')
 
   localStorage.setItem('data', JSON.stringify(data))
   localStorage.setItem('time', Date.now())
