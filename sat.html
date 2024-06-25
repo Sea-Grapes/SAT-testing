@@ -2,37 +2,46 @@
 <title>SAT Testing</title>
 <script src="https://cdn.tailwindcss.com"></script>
 
-<main class='max-w-8xl mx-auto p-8'>
-  <header class='table p-6 border border-slate-300 rounded-lg mb-10'>
-    <div class='mb-10 space-y-1'>
-      <h1 class='text-2xl font-semibold'>SAT Testing Lookup</h1>
-      <p class='text-slate-500 text-sm'>Search for SAT testing locations near you</p>
+<main class='flex flex-col lg:flex-row gap-8 max-w-8xl mx-auto p-8'>
+  <section class='shrink-0'>
+    <header class='align-top p-6 border border-slate-300 rounded-lg'>
+      <div class='mb-10 space-y-1'>
+        <h1 class='text-2xl font-semibold'>SAT Testing Lookup</h1>
+        <p class='text-slate-500 text-sm'>Search for SAT testing locations near you</p>
+      </div>
+      <form class='space-y-5'>
+        <div>
+          <label for='input-zipcode' class='block mb-2 text-slate-600 font-medium'>Zip code</label>
+          <input id='input-zipcode' placeholder='Enter zip code'
+            class='min-w-full h-9 px-3 py-1 text-sm border border-slate-300 rounded-lg outline-none focus:border-slate-500'
+            type='text'>
+        </div>
+        <div>
+          <label for='input-distance' class='block mb-2 text-slate-600 font-medium'>Max distance (miles)</label>
+          <input id='input-distance' placeholder='Enter distance' value='25'
+            class='min-w-full h-9 px-3 py-1 text-sm border border-slate-300 rounded-lg outline-none focus:border-slate-500'
+            type='number'>
+        </div>
+        <button type='button'
+          class='min-w-full p-2 text-center bg-slate-100 hover:bg-slate-200 rounded-lg border border-slate-300'>Search</button>
+      </form>
+    </header>
+  </section>
+  <section class='grow'>
+    <div class='border border-slate-300 rounded-lg overflow-hidden'>
+      <table class='min-w-full'>
+        <thead class='divide-y divide-slate-300 *:divide-x *:divide-slate-300'>
+          <tr class='bg-slate-100 font-medium text-slate-400 text-left *:py-4 *:px-6'>
+            <th>Date</th>
+            <th>School</th>
+            <th>Address</th>
+            <th>Distance</th>
+          </tr>
+        </thead>
+        <tbody class='divide-y divide-slate-300 *:divide-x *:divide-slate-300'></tbody>
+      </table>
     </div>
-    <form class='space-y-5'>
-      <div>
-        <label for='input-zipcode' class='block mb-2 text-slate-600 font-medium'>Zip code</label>
-        <input id='input-zipcode' placeholder='Enter zip code' class='min-w-full h-9 px-3 py-1 text-sm border border-slate-300 rounded-lg outline-none focus:border-slate-500' type='text'>
-      </div>
-      <div>
-        <label for='input-distance' class='block mb-2 text-slate-600 font-medium'>Max distance (miles)</label>
-        <input id='input-distance' placeholder='Enter distance' value='25' class='min-w-full h-9 px-3 py-1 text-sm border border-slate-300 rounded-lg outline-none focus:border-slate-500' type='number'>
-      </div>
-      <button class=''>Search</button>
-    </form>
-  </header>
-  <div class='table border border-slate-300 rounded-lg overflow-hidden'>
-    <table>
-      <thead class='divide-y divide-slate-300 *:divide-x *:divide-slate-300'>
-        <tr class='bg-slate-100 font-medium text-slate-400 text-left *:py-4 *:px-6'>
-          <th>Date</th>
-          <th>School</th>
-          <th>Address</th>
-          <th>Distance</th>
-        </tr>
-      </thead>
-      <tbody class='divide-y divide-slate-300 *:divide-x *:divide-slate-300'></tbody>
-    </table>
-  </div>
+  </section>
 </main>
 
 <script>
