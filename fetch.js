@@ -27,15 +27,22 @@ try {
   })
 } catch(e) { log('Error with CollegeBoard API')}
 
+let testData
+async function test() {
 
-async function fetchData() {
+  testData = {}
+
   const res = await fetch(`https://sat-admin-dates.collegeboard.org/`)
   let sessions = await res.json()
+
+  log('Recieved testing dates, scanning for sessions')
 
   sessions = await Promise.all(sessions.map(({
     eventFormattedDate: dateAPI,
     eventDisplayDate: displayDate,
   }) => fetch(`https://aru-test-center-search.collegeboard.org/prod/test-centers?date=${dateAPI}&zip=${zipInput.value}&country=US`))) 
 
+  sessions = await Promise.all(sessions.map(res => res.json()))
+  
   console.log(sessions)
 }
