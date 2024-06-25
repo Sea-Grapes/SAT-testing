@@ -53,7 +53,6 @@ async function fetchData() {
     }) => {
       let schools = await (await fetch(`https://aru-test-center-search.collegeboard.org/prod/test-centers?date=${dateAPI}&zip=${zipInput.value}&country=US`)).json()
       schools = schools
-      // .filter(school => school.distance <= distanceInput.value)
       .filter(school => school.seatAvailability)
       .map(({
         name = 'Unknown School', distance = 0,
@@ -120,23 +119,29 @@ function setUI() {
 }
 
 const form = document.querySelector('form')
+
 const zipInput = document.querySelector('#zipcode')
+zipInput.value = localStorage.getItem('zipInput')
 const distanceInput = document.querySelector('#distance')
+distanceInput.value = localStorage.getItem('distanceInput')
+
 document.querySelector('button').addEventListener('click', e => {
   if(form.checkValidity()) fetchData()
+  localStorage.setItem('zipInput', zipInput.value)
+  localStorage.setItem('distanceInput', distanceInput.value)
 })
 
 const currentTime = Date.now()
 log(`Systems online ${currentTime}ms`)
 
-const previousTime = localStorage.getItem('time') ?? 0
+const previousTime = localStorage.getItem('time') ?? currentTime
 log(`Last updated ${previousTime}ms`)
 
 const delayMS = currentTime - previousTime
 const delayH = delayMS / (1000 * 60 * 60)
 log(`It has been ${delayH.toFixed(3)}h since last fetched`)
 
-let data = JSON.parse(localStorage.getItem('data'))
+let data = JSON.parse(localStorage.getItem('data')) ?? {}
 if (delayH > 12) fetchData()
 else setUI()
 
