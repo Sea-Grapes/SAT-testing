@@ -22,25 +22,14 @@
 <script>
 const log = msg => console.log(`[SAT] ${msg}`)
 
-const currentTime = Date.now()
-log(`Systems online ${currentTime}ms`)
-
-const previousTime = localStorage.getItem('time') ?? 0
-log(`Last updated ${previousTime}ms`)
-
-const delayMS = currentTime - previousTime
-const delayH = delayMS / (1000 * 60 * 60)
-log(`It has been ${delayH.toFixed(3)}h since last fetched`)
-
-let data = localStorage.getItem('data')
-if(delayH > 12) fetchData()
-// else setUI()
 
 function fetchData() {
   log('Updating data...')
   data = {
     'August 24, 2024 — Saturday': [
-      ['Rainier Beach High School', '8815 Seward Park Avenue South Seattle, WA 98118', 11.65]
+      ['Rainier Beach High School', '8815 Seward Park Avenue South Seattle, WA 98118', 11.65],
+      ['Rainier Beach High School', '8815 Seward Park Avenue South Seattle, WA 98118', 11.65],
+      ['Rainier Beach High School', '8815 Seward Park Avenue South Seattle, WA 98118', 11.65],
     ]
   }
 
@@ -78,6 +67,20 @@ function setUI() {
   }
 }
 
+
+const currentTime = Date.now()
+log(`Systems online ${currentTime}ms`)
+
+const previousTime = localStorage.getItem('time') ?? 0
+log(`Last updated ${previousTime}ms`)
+
+const delayMS = currentTime - previousTime
+const delayH = delayMS / (1000 * 60 * 60)
+log(`It has been ${delayH.toFixed(3)}h since last fetched`)
+
+let data = JSON.parse(localStorage.getItem('data'))
+if (delayH > 12) fetchData()
+else setUI()
 // fetch(`https://sat-admin-dates.collegeboard.org/`).then(res => res.json()).then(days => {
 //   days = days.map(e => e.eventFormattedDate)
 //   window.days = days
