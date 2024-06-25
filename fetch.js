@@ -53,9 +53,8 @@ async function test() {
       distance.toFixed(2)
     ])
     data[displayDate] = schools
-    log(`Added schools from ${dateAPI} to data`)
+    log(`Added schools from ${dateAPI} to Data`)
   })) 
 
   log('Finished fetching data')
-  
 }

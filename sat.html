@@ -30,7 +30,6 @@
       <table class='min-w-full'>
         <thead class='divide-y divide-slate-300 *:divide-x *:divide-slate-300'>
           <tr class='bg-slate-100 font-medium text-slate-400 text-left *:py-4 *:px-6'>
-            <th>Date</th>
             <th>School</th>
             <th>Address</th>
             <th>Distance</th>
@@ -97,22 +96,29 @@ const table = document.querySelector('tbody')
 function setUI() {
   table.innerHTML = ''
 
-  for (const [date, options] of Object.entries(data)) {
+  for (let [date, options] of Object.entries(data)) {
+
+    options = options.filter(school => school.distance <= distanceInput.value)
+    if(Object.keys(options).length === 0) return
+
+    make(table, 'tr', tr => {
+      make(tr, 'th', th => {
+        th.textContent = date
+      })
+    })
+
     options.forEach(([school, address, distance]) => {
 
-      if(distance <= +distanceInput.value) {
-        const row = make(table, 'tr', tr => tr.classList = '*:py-4 *:px-6')
-        make(row, 'td', td => td.textContent = date)
-        make(row, 'td', td => td.textContent = school)
-        make(row, 'td', td => {
-          make(td, 'a', a => {
-            a.classList = 'underline text-blue-600 hover:text-blue-800 visited:text-purple-600'
-            a.href = `https://www.google.com/maps/search/?api=1&query=${address}`
-            a.textContent = address
-          })
+      const row = make(table, 'tr', tr => tr.classList = '*:py-4 *:px-6')
+      make(row, 'td', td => td.textContent = school)
+      make(row, 'td', td => {
+        make(td, 'a', a => {
+          a.classList = 'underline text-blue-600 hover:text-blue-800 visited:text-purple-600'
+          a.href = `https://www.google.com/maps/search/?api=1&query=${address}`
+          a.textContent = address
         })
-        make(row, 'td', td => td.textContent = `${distance} mi`)
-      }
+      })
+      make(row, 'td', td => td.textContent = `${distance} mi`)
 
     })
   }
