@@ -48,39 +48,43 @@ const capitalize = str => str.toLowerCase().split(' ').map(s => s[0].toUpperCase
 
 
 async function fetchData() {
-  log('Updating data...')
-  data = {}
+  try {
+    log('Updating data...')
+    data = {}
 
-  let sessions = await (await fetch(`https://sat-admin-dates.collegeboard.org/`)).json()
+    let sessions = await (await fetch(`https://sat-admin-dates.collegeboard.org/`)).json()
 
-  log('Recieved testing dates, scanning for sessions')
+    log('Recieved testing dates, scanning for sessions')
 
-  await Promise.all(sessions.map( async({
-    eventFormattedDate: dateAPI,
-    eventDisplayDate: displayDate,
-  }) => {
-    let schools = await (await fetch(`https://aru-test-center-search.collegeboard.org/prod/test-centers?date=${dateAPI}&zip=${zipInput.value}&country=US`)).json()
-    console.log(schools)
-    schools = schools
-    .filter(school => school.distance <= distanceInput.value)
-    .filter(school => school.seatAvailability)
-    .map(({
-      name, distance,
-      address1, city, state, zip,
-    }) => [
-      capitalize(name),
-      `${capitalize(address1)} ${capitalize(city)} ${state.toUpperCase()} ${zip}`,
-      distance.toFixed(2)
-    ])
-    data[displayDate] = schools
-    log(`Added schools from ${dateAPI} to data`)
-  })) 
+    await Promise.all(sessions.map( async({
+      eventFormattedDate: dateAPI,
+      eventDisplayDate: displayDate,
+    }) => {
+      let schools = await (await fetch(`https://aru-test-center-search.collegeboard.org/prod/test-centers?date=${dateAPI}&zip=${zipInput.value}&country=US`)).json()
+      schools = schools
+      // .filter(school => school.distance <= distanceInput.value)
+      .filter(school => school.seatAvailability)
+      .map(({
+        name, distance,
+        address1, city, state, zip,
+      }) => [
+        capitalize(name),
+        `${capitalize(address1)} ${capitalize(city)} ${state.toUpperCase()} ${zip}`,
+        distance.toFixed(2)
+      ])
+      data[displayDate] = schools
+      log(`Added schools from ${dateAPI} to data`)
+    })) 
 
-  log('Finished fetching data')
+    log('Finished fetching data')
 
-  localStorage.setItem('data', JSON.stringify(data))
-  localStorage.setItem('time', Date.now())
-  setUI()
+    localStorage.setItem('data', JSON.stringify(data))
+    localStorage.setItem('time', Date.now())
+    setUI()
+  } catch(e) {
+    alert('Error with CollegeBoard API')
+    throw e
+  }
 }
 
 function make(parent, node, call) {
@@ -96,6 +100,8 @@ function setUI() {
 
   for (const [date, options] of Object.entries(data)) {
     options.forEach(([school, address, distance]) => {
+
+      if(distance <= distanceInput.value) return
 
       const row = make(table, 'tr', tr => tr.classList = '*:py-4 *:px-6')
       make(row, 'td', td => td.textContent = date)
@@ -132,12 +138,5 @@ log(`It has been ${delayH.toFixed(3)}h since last fetched`)
 let data = JSON.parse(localStorage.getItem('data'))
 if (delayH > 12) fetchData()
 else setUI()
-// fetch(`https://sat-admin-dates.collegeboard.org/`).then(res => res.json()).then(days => {
-//   days = days.map(e => e.eventFormattedDate)
-//   window.days = days
-//   console.log(days)
 
-//   days.forEach(day => fetch(`https://aru-test-center-search.collegeboard.org/prod/test-centers?date=${day}&zip=98075&country=US`))
-// })
-// .catch(e => alert('Error with CollegeBoard API'))
 </script>
