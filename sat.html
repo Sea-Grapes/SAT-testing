@@ -6,33 +6,21 @@
   <h1 class='text-2xl font-semibold mb-4'>SAT Testing Lookup</h1>
   <div class='inline-block border border-slate-300 rounded-lg overflow-hidden'>
     <table>
-      <tbody class='divide-y divide-slate-300 *:divide-x *:divide-slate-300'>
+      <thead class='divide-y divide-slate-300 *:divide-x *:divide-slate-300'>
         <tr class='bg-slate-100 font-medium text-slate-400 text-left *:py-4 *:px-6'>
           <th>Date</th>
           <th>School</th>
           <th>Address</th>
           <th>Distance</th>
         </tr>
-        <tr>
-        </tr>
-        <tr class='*:py-4 *:px-6'>
-          <td>August 24, 2024 — Saturday</td>
-          <td>Rainier Beach High School</td>
-          <td>8815 Seward Park Avenue South Seattle, WA 98118</td>
-          <td>11.65 mi</td>
-        </tr>
-      </tbody>
+      </thead>
+      <tbody class='divide-y divide-slate-300 *:divide-x *:divide-slate-300'></tbody>
     </table>
   </div>
 </main>
 
 <script>
-
 const log = msg => console.log(`[SAT] ${msg}`)
-
-function updateData() {
-  localStorage.setItem('time', currentTime)
-}
 
 const currentTime = Date.now()
 log(`Systems online ${currentTime}ms`)
@@ -44,13 +32,50 @@ const delayMS = currentTime - previousTime
 const delayH = delayMS / (1000 * 60 * 60)
 log(`It has been ${delayH.toFixed(3)}h since last fetched`)
 
-if(delayH > 12) {
-  log(`It has been more than 12h, time to update`)
-  updateData()
+let data = localStorage.getItem('data')
+if(delayH > 12) fetchData()
+// else setUI()
+
+function fetchData() {
+  log('Updating data...')
+  data = {
+    'August 24, 2024 — Saturday': [
+      ['Rainier Beach High School', '8815 Seward Park Avenue South Seattle, WA 98118', 11.65]
+    ]
+  }
+
+  localStorage.setItem('data', JSON.stringify(data))
+  localStorage.setItem('time', Date.now())
+  setUI()
 }
 
-else {
-  log(`It has been less than 12h, no need to update`)
+function make(parent, node, call) {
+  node = document.createElement(node)
+  parent.append(node)
+  if (call) call(node)
+  return node
+}
+
+const table = document.querySelector('tbody')
+function setUI() {
+  table.innerHTML = ''
+
+  for (const [date, options] of Object.entries(data)) {
+    options.forEach(([school, address, distance]) => {
+
+      const row = make(table, 'tr', tr => tr.classList = '*:py-4 *:px-6')
+      make(row, 'td', td => td.textContent = date)
+      make(row, 'td', td => td.textContent = school)
+      make(row, 'td', td => {
+        make(td, 'a', a => {
+          a.classList = 'underline text-blue-600 hover:text-blue-800 visited:text-purple-600'
+          a.href = `https://www.google.com/maps/search/?api=1&query=${address}`
+          a.textContent = address
+        })
+      })
+      make(row, 'td', td => td.textContent = `${distance} mi`)
+    })
+  }
 }
 
 // fetch(`https://sat-admin-dates.collegeboard.org/`).then(res => res.json()).then(days => {
