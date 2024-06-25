@@ -47,10 +47,10 @@ async function fetchData() {
 
     log('Recieved testing dates, scanning for sessions')
 
-    await Promise.all(sessions.map( async({
+    for(let {
       eventFormattedDate: dateAPI,
       eventDisplayDate: displayDate,
-    }) => {
+    } of sessions) {
       let schools = await (await fetch(`https://aru-test-center-search.collegeboard.org/prod/test-centers?date=${dateAPI}&zip=${zipInput.value}&country=US`)).json()
       schools = schools
       .filter(school => school.seatAvailability)
@@ -64,7 +64,7 @@ async function fetchData() {
       ])
       data[displayDate] = schools
       log(`Added schools from ${dateAPI} to data`)
-    }))
+    }
 
     log('Finished fetching data')
 
