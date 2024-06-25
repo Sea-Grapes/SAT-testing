@@ -44,8 +44,7 @@
 
 <script>
 const log = msg => console.log(`[SAT] ${msg}`)
-const capitalize = str => str.toLowerCase().split(' ').map(s => s[0].toUpperCase() + s.slice(1)).join(' ')
-
+const capitalize = str => str.toLowerCase().replaceAll(/\b./g, s => s.toUpperCase())
 
 async function fetchData() {
   try {
@@ -65,8 +64,8 @@ async function fetchData() {
       // .filter(school => school.distance <= distanceInput.value)
       .filter(school => school.seatAvailability)
       .map(({
-        name, distance,
-        address1, city, state, zip,
+        name = 'Unknown School', distance = 0,
+        address1 = 'Address', city = 'City', state = 'State', zip = 'Zip',
       }) => [
         capitalize(name),
         `${capitalize(address1)} ${capitalize(city)} ${state.toUpperCase()} ${zip}`,
@@ -101,19 +100,20 @@ function setUI() {
   for (const [date, options] of Object.entries(data)) {
     options.forEach(([school, address, distance]) => {
 
-      if(distance <= distanceInput.value) return
-
-      const row = make(table, 'tr', tr => tr.classList = '*:py-4 *:px-6')
-      make(row, 'td', td => td.textContent = date)
-      make(row, 'td', td => td.textContent = school)
-      make(row, 'td', td => {
-        make(td, 'a', a => {
-          a.classList = 'underline text-blue-600 hover:text-blue-800 visited:text-purple-600'
-          a.href = `https://www.google.com/maps/search/?api=1&query=${address}`
-          a.textContent = address
+      if(distance <= +distanceInput.value) {
+        const row = make(table, 'tr', tr => tr.classList = '*:py-4 *:px-6')
+        make(row, 'td', td => td.textContent = date)
+        make(row, 'td', td => td.textContent = school)
+        make(row, 'td', td => {
+          make(td, 'a', a => {
+            a.classList = 'underline text-blue-600 hover:text-blue-800 visited:text-purple-600'
+            a.href = `https://www.google.com/maps/search/?api=1&query=${address}`
+            a.textContent = address
+          })
         })
-      })
-      make(row, 'td', td => td.textContent = `${distance} mi`)
+        make(row, 'td', td => td.textContent = `${distance} mi`)
+      }
+
     })
   }
 }
