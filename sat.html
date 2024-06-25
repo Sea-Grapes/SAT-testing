@@ -13,13 +13,13 @@
         <div>
           <label for='zipcode' class='block mb-2 text-slate-600 font-medium'>Zip code</label>
           <input id='zipcode' placeholder='Enter zip code' pattern='^\d{5}(-\d{4})?$' required
-            class='min-w-full h-9 px-3 py-1 text-sm border border-slate-300 rounded-lg outline-none focus:border-slate-500'
+            class='min-w-full h-9 px-3 py-1 text-sm border border-slate-300 invalid:[&:not(:placeholder-shown):not(:focus)]:border-red-500 rounded-lg outline-none focus:border-slate-500'
             type='text'>
         </div>
         <div>
           <label for='distance' class='block mb-2 text-slate-600 font-medium'>Max distance (miles)</label>
           <input id='distance' placeholder='Enter distance' value='25' min='0' max='10000' type='number'
-            class='min-w-full h-9 px-3 py-1 text-sm border border-slate-300 rounded-lg outline-none focus:border-slate-500'>
+            class='min-w-full h-9 px-3 py-1 text-sm border border-slate-300 invalid:[&:not(:placeholder-shown):not(:focus)]:border-red-500 rounded-lg outline-none focus:border-slate-500'>
         </div>
         <button type='button' class='min-w-full p-2 text-center bg-slate-100 hover:bg-slate-200 rounded-lg border border-slate-300'>Search</button>
       </form>
@@ -44,22 +44,39 @@
 
 <script>
 const log = msg => console.log(`[SAT] ${msg}`)
-
+const capitalize = str => str.toLowerCase().split(' ').map(s => s[0].toUpperCase() + s.slice(1)).join(' ')
 
 function fetchData() {
   log('Updating data...')
-  data = {
-    'August 24, 2024 — Saturday': [
-      ['Rainier Beach High School', '8815 Seward Park Avenue South Seattle, WA 98118', 11.65],
-      ['Rainier Beach High School', '8815 Seward Park Avenue South Seattle, WA 98118', 11.65],
-      ['Rainier Beach High School', '8815 Seward Park Avenue South Seattle, WA 98118', 11.65],
-    ],
-    'October 5, 2024 — Saturday': [
-      ['Rainier Beach High School', '8815 Seward Park Avenue South Seattle, WA 98118', 11.65],
-      ['Rainier Beach High School', '8815 Seward Park Avenue South Seattle, WA 98118', 11.65],
-      ['Rainier Beach High School', '8815 Seward Park Avenue South Seattle, WA 98118', 11.65],
-    ]
-  }
+
+  try {
+    fetch(`https://sat-admin-dates.collegeboard.org/`).then(res => res.json()).then(sessions => {
+      data = {}
+
+      sessions.forEach(({
+        eventFormattedDate: dateAPI,
+        eventDisplayDate: displayDate,
+      }) => {
+        fetch(`https://aru-test-center-search.collegeboard.org/prod/test-centers?date=${dateAPI}&zip=${zipInput.value}&country=US`)
+          .then(res => res.json())
+          .then(schools => {
+            schools = schools
+              .filter(school => school.distance <= distanceInput.value)
+              .filter(school => school.seatAvailability)
+              .map(({
+                name,
+                address1, city, state, zip,
+                distance
+              }) => [
+                  capitalize(name),
+                  `${capitalize(address1)} ${capitalize(city)} ${state.toUpperCase()} ${zip}`,
+                  distance.toFixed(2)
+                ])
+            data[displayDate] = schools
+          })
+      })
+    })
+  } catch (e) { log('Error with CollegeBoard API') }
 
   localStorage.setItem('data', JSON.stringify(data))
   localStorage.setItem('time', Date.now())
@@ -95,10 +112,11 @@ function setUI() {
   }
 }
 
-const zip = document.querySelector('#zipcode')
-const distance = document.querySelector('#distance')
+const form = document.querySelector('form')
+const zipInput = document.querySelector('#zipcode')
+const distanceInput = document.querySelector('#distance')
 document.querySelector('button').addEventListener('click', e => {
-  console.log(zip.value, distance.value)
+  if(form.checkValidity()) fetchData()
 })
 
 const currentTime = Date.now()
