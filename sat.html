@@ -27,6 +27,32 @@
 </main>
 
 <script>
+
+const log = msg => console.log(`[SAT] ${msg}`)
+
+function updateData() {
+  localStorage.setItem('time', currentTime)
+}
+
+const currentTime = Date.now()
+log(`Systems online ${currentTime}ms`)
+
+const previousTime = localStorage.getItem('time') ?? 0
+log(`Last updated ${previousTime}ms`)
+
+const delayMS = currentTime - previousTime
+const delayH = delayMS / (1000 * 60 * 60)
+log(`It has been ${delayH.toFixed(3)}h since last fetched`)
+
+if(delayH > 12) {
+  log(`It has been more than 12h, time to update`)
+  updateData()
+}
+
+else {
+  log(`It has been less than 12h, no need to update`)
+}
+
 // fetch(`https://sat-admin-dates.collegeboard.org/`).then(res => res.json()).then(days => {
 //   days = days.map(e => e.eventFormattedDate)
 //   window.days = days
