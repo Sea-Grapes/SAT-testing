@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<title>SAT Testing</title>
+<script src="https://cdn.tailwindcss.com"></script>
+
+<main class='max-w-8xl mx-auto p-8'>
+  <h1 class='text-2xl font-semibold mb-4'>SAT Testing Lookup</h1>
+  <div class='inline-block border border-slate-300 rounded-lg overflow-hidden'>
+    <table>
+      <tbody class='divide-y divide-slate-300 *:divide-x *:divide-slate-300'>
+        <tr class='bg-slate-100 font-medium text-slate-400 text-left *:py-4 *:px-6'>
+          <th>Date</th>
+          <th>School</th>
+          <th>Address</th>
+          <th>Distance</th>
+        </tr>
+        <tr>
+        </tr>
+        <tr class='*:py-4 *:px-6'>
+          <td>August 24, 2024 — Saturday</td>
+          <td>Rainier Beach High School</td>
+          <td>8815 Seward Park Avenue South Seattle, WA 98118</td>
+          <td>11.65 mi</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</main>
+
+<script>
+// fetch(`https://sat-admin-dates.collegeboard.org/`).then(res => res.json()).then(days => {
+//   days = days.map(e => e.eventFormattedDate)
+//   window.days = days
+//   console.log(days)
+
+//   days.forEach(day => fetch(`https://aru-test-center-search.collegeboard.org/prod/test-centers?date=${day}&zip=98075&country=US`))
+// })
+// .catch(e => alert('Error with CollegeBoard API'))
+</script>
