@@ -70,12 +70,14 @@ async function fetchData() {
       ])
       // data[displayDate] = schools
       data.push({
-        dateAPI,
+        date: new Date(dateAPI),
         displayDate,
         schools
       })
       log(`Added schools from ${dateAPI} to data`)
     }))
+
+    data.sort((a, b) => a.date - b.date)
 
     log('Finished fetching data')
 
