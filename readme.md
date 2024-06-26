@@ -1,5 +1,5 @@
 # SAT Testing Lookup
-A simple webpage to easily check where/when you can take the SAT. Uses the CollegeBoard API to find locations, currently only works for the US.
+A simple webpage to easily check where/when you can take the SAT. Uses the CollegeBoard API to find locations, currently only works for the US. Probably has 50% chance of working on your device.
 
 ![Example search](/misc/img1.png?raw=true "Example search")
 
