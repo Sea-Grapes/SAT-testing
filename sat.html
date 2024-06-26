@@ -136,6 +136,7 @@ distanceInput.value = localStorage.getItem('distanceInput') ?? 25
 
 document.querySelector('button').addEventListener('click', async e => {
   if(form.checkValidity()) {
+    localStorage.setItem('zipInput', zipInput.value)
     if(zipInput.value !== zipInput.pastValue) {
       await fetchData()
       zipInput.pastValue = zipInput.value
@@ -143,8 +144,6 @@ document.querySelector('button').addEventListener('click', async e => {
     setUI()
   }
 })
-
-zipInput.addEventListener('change', e => localStorage.setItem('zipInput', zipInput.value))
 
 distanceInput.addEventListener('change', e => {
   setUI()
