@@ -47,7 +47,7 @@ async function fetchData() {
   try {
     log('Updating data...')
     header.textContent = 'Fetching data'
-    data = {}
+    data = []
 
     let sessions = await (await fetch(`https://sat-admin-dates.collegeboard.org/`)).json()
 
@@ -68,7 +68,12 @@ async function fetchData() {
         `${capitalize(address1)} ${capitalize(city)} ${state.toUpperCase()} ${zip}`,
         distance.toFixed(2) 
       ])
-      data[displayDate] = schools
+      // data[displayDate] = schools
+      data.push({
+        dateAPI,
+        displayDate,
+        schools
+      })
       log(`Added schools from ${dateAPI} to data`)
     }))
 
@@ -91,27 +96,31 @@ function make(parent, node, call) {
 
 const table = document.querySelector('tbody')
 const header = document.querySelector('th')
+
+
 function setUI() {
   if(!data) return
+
   table.innerHTML = ''
   header.textContent = `Search results for ${zipInput.value}`
 
-  console.log(Object.keys(data).map(d => d.split(' — ')[0]))
-
-  for (let [date, options] of Object.entries(data)) {
-
-    options = options.filter(school => school[2] <= +distanceInput.value)
-    if(Object.keys(options).length === 0) continue
+  data.forEach(({
+    dateAPI,
+    displayDate,
+    schools
+  }) => {
+    schools = schools.filter(([n, a, distance]) => distance <= +distanceInput.value)
+    if(!schools.length) return
 
     make(table, 'tr', tr => {
       make(tr, 'td', td => {
         td.colSpan = 3
-        td.textContent = date
+        td.textContent = displayDate
         td.classList = 'text-center font-medium bg-slate-50 text-slate-400 py-4 px-6'
       })
     })
 
-    options.forEach(([school, address, distance]) => {
+    schools.forEach(([school, address, distance]) => {
 
       const row = make(table, 'tr', tr => tr.classList = '*:py-4 *:px-6')
       make(row, 'td', td => td.textContent = school)
@@ -125,7 +134,7 @@ function setUI() {
       make(row, 'td', td => td.textContent = `${distance} mi`)
 
     })
-  }
+  })
 }
 
 const form = document.querySelector('form')
