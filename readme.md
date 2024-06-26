@@ -12,4 +12,10 @@ A simple webpage to easily check where/when you can take the SAT. Uses the Colle
 The CollegeBoard search page requires you to manually look through each test day rather than displaying everything at once. Centralized searching helps prevent students from missing out on new available sessions.
 
 ## Notes
-Lots of inefficiencies and potential bugs but idc lol. Data managing turned into a mess, still uses tailwind playcdn, and no ui framework... but its whatever. Maybe will remake in the future
+Lots of inefficiencies and potential bugs but idc lol. Data managing turned into a mess, still uses tailwind playcdn, and no ui framework... but its whatever. Maybe will remake in the future.
+
+**Todo list**
+- [ ] Highlight new locations when data updates
+- [ ] Non US support
+- [ ] Refactor UI display
+- [ ] Reactivity/caching
