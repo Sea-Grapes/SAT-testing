@@ -144,6 +144,8 @@ document.querySelector('button').addEventListener('click', async e => {
   localStorage.setItem('distanceInput', distanceInput.value)
 })
 
+distanceInput.addEventListener('change', e => setUI())
+
 const currentTime = Date.now()
 log(`Systems online ${currentTime}ms`)
 
