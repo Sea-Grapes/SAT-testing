@@ -96,6 +96,8 @@ function setUI() {
   table.innerHTML = ''
   header.textContent = `Search results for ${zipInput.value}`
 
+  console.log(Object.keys(data).map(d => d.split(' — ')[0]))
+
   for (let [date, options] of Object.entries(data)) {
 
     options = options.filter(school => school[2] <= +distanceInput.value)
