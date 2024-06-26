@@ -76,7 +76,6 @@ async function fetchData() {
 
     localStorage.setItem('data', JSON.stringify(data))
     localStorage.setItem('time', Date.now())
-    setUI()
   } catch(e) {
     alert('Error with CollegeBoard API')
     throw e
@@ -133,8 +132,14 @@ zipInput.value = localStorage.getItem('zipInput')
 const distanceInput = document.querySelector('#distance')
 distanceInput.value = localStorage.getItem('distanceInput') ?? 25
 
-document.querySelector('button').addEventListener('click', e => {
-  if(form.checkValidity()) fetchData()
+document.querySelector('button').addEventListener('click', async e => {
+  if(form.checkValidity()) {
+    if(zipInput.value !== zipInput.pastValue) {
+      await fetchData()
+      zipInput.pastValue = zipInput.value
+    }
+    setUI()
+  }
   localStorage.setItem('zipInput', zipInput.value)
   localStorage.setItem('distanceInput', distanceInput.value)
 })
