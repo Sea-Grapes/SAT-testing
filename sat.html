@@ -92,6 +92,7 @@ function make(parent, node, call) {
 const table = document.querySelector('tbody')
 const header = document.querySelector('th')
 function setUI() {
+  if(!data) return
   table.innerHTML = ''
   header.textContent = `Search results for ${zipInput.value}`
 
@@ -129,6 +130,7 @@ const form = document.querySelector('form')
 
 const zipInput = document.querySelector('#zipcode')
 zipInput.value = localStorage.getItem('zipInput')
+zipInput.pastValue = zipInput.value
 const distanceInput = document.querySelector('#distance')
 distanceInput.value = localStorage.getItem('distanceInput') ?? 25
 
@@ -140,11 +142,14 @@ document.querySelector('button').addEventListener('click', async e => {
     }
     setUI()
   }
-  localStorage.setItem('zipInput', zipInput.value)
-  localStorage.setItem('distanceInput', distanceInput.value)
 })
 
-distanceInput.addEventListener('change', e => setUI())
+zipInput.addEventListener('change', e => localStorage.setItem('zipInput', zipInput.value))
+
+distanceInput.addEventListener('change', e => {
+  setUI()
+  localStorage.setItem('distanceInput', distanceInput.value)
+})
 
 const currentTime = Date.now()
 log(`Systems online ${currentTime}ms`)
