@@ -27,7 +27,12 @@
   </section>
   <section class='grow'>
     <div class='border border-slate-300 rounded-lg overflow-hidden'>
-      <table class='min-w-full'>
+      <table class='min-w-full divide-y divide-slate-300'>
+        <thead>
+          <tr>
+            <th colspan='3' class='text-left font-medium text-slate-400 bg-slate-100 px-6 py-4'>Results will appear here</th>
+          </tr>
+        </thead>
         <tbody class='divide-y divide-slate-300 *:divide-x *:divide-slate-300'></tbody>
       </table>
     </div>
@@ -41,6 +46,7 @@ const capitalize = str => str.toLowerCase().replaceAll(/\b./g, s => s.toUpperCas
 async function fetchData() {
   try {
     log('Updating data...')
+    header.textContent = 'Fetching data'
     data = {}
 
     let sessions = await (await fetch(`https://sat-admin-dates.collegeboard.org/`)).json()
@@ -85,8 +91,10 @@ function make(parent, node, call) {
 }
 
 const table = document.querySelector('tbody')
+const header = document.querySelector('th')
 function setUI() {
   table.innerHTML = ''
+  header.textContent = `Search results for ${zipInput.value}`
 
   for (let [date, options] of Object.entries(data)) {
 
@@ -97,7 +105,7 @@ function setUI() {
       make(tr, 'td', td => {
         td.colSpan = 3
         td.textContent = date
-        td.classList = 'text-center font-medium bg-slate-100 text-slate-400 py-4 px-6'
+        td.classList = 'text-center font-medium bg-slate-50 text-slate-400 py-4 px-6'
       })
     })
 
@@ -123,7 +131,7 @@ const form = document.querySelector('form')
 const zipInput = document.querySelector('#zipcode')
 zipInput.value = localStorage.getItem('zipInput')
 const distanceInput = document.querySelector('#distance')
-distanceInput.value = localStorage.getItem('distanceInput')
+distanceInput.value = localStorage.getItem('distanceInput') ?? 25
 
 document.querySelector('button').addEventListener('click', e => {
   if(form.checkValidity()) fetchData()
@@ -141,8 +149,8 @@ const delayMS = currentTime - previousTime
 const delayH = delayMS / (1000 * 60 * 60)
 log(`It has been ${delayH.toFixed(3)}h since last fetched`)
 
-let data = JSON.parse(localStorage.getItem('data')) ?? {}
+let data = JSON.parse(localStorage.getItem('data'))
 if (delayH > 12) fetchData()
-else setUI()
+else if(data) setUI()
 
 </script>
