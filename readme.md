@@ -1,6 +1,8 @@
 # SAT Testing Lookup
 A simple webpage to easily check where/when you can take the SAT. Uses the CollegeBoard API to find locations, currently only works for the US.
 
+![Example search](/misc/img1.png?raw=true "Example search")
+
 ## Features
 - Input zip code to search around the area
 - Maximum distance (miles) to limit search region
@@ -19,3 +21,5 @@ Lots of inefficiencies and potential bugs but idc lol. Data managing turned into
 - [ ] Non US support
 - [ ] Refactor UI display
 - [ ] Reactivity/caching
+- [ ] Compile tailwind
+- [ ] I forgor to add dark mode
