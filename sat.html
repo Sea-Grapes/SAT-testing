@@ -1,6 +1,13 @@
 <!DOCTYPE html>
-<title>SAT Testing</title>
-<script src="https://cdn.tailwindcss.com"></script>
+<html lang='en'>
+<head>
+  <meta charset='UTF-8'>
+  <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+  <title>SAT Testing</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+</html>
+
 
 <main class='flex flex-col lg:flex-row gap-8 max-w-8xl mx-auto p-8'>
   <section class='shrink-0'>
@@ -173,7 +180,9 @@ const delayH = delayMS / (1000 * 60 * 60)
 log(`It has been ${delayH.toFixed(3)}h since last fetched`)
 
 let data = JSON.parse(localStorage.getItem('data'))
-if (delayH > 12) fetchData()
+if (delayH > 12) {
+  fetchData().then(() => setUI())
+}
 else if(data) setUI()
 
 </script>
